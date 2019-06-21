@@ -17,86 +17,22 @@ type MainController struct {
 }
 
 func (c *MainController) Get() {
-	/*
-		//1.有ORM对象
-		o := orm.NewOrm()
-		//2.有一个要插入数据的结构体对象
-		user := models.User{}
-		//3.对结构体赋值
-		user.Name = "111"
-		user.Pwd = "222"
-		//4.插入
-		_,err := o.Insert(&user)
-		if err != nil{
-			beego.Info("插入失败",err)
-			return
-		}
-	*/
-
-	/*  查询有关代码
-	//1.有ORM对象
 	o := orm.NewOrm()
-
-	//2.查询的对象
-	user := models.User{}
-	//3.指定查询对象字段值
-	user.Name = "111"
-
-	 user.Id = 1
-	//4.查询
-	err := o.Read(&user)
-
-	err := o.Read(&user,"Name")
+	var articles []models.Article //结构体数组
+	_, err := o.QueryTable("Article").All(&articles)
 	if err != nil {
-		beego.Info("查询失败", err)
+		beego.Info("查询所有文章信息出错")
 		return
 	}
-
-	beego.Info("查询成功",user)
-	*/
-	/*
-		//1.要有ORM对象   第一种更新
-		o := orm.NewOrm()
-
-		//2.需要更新的结构体对象
-		user := models.User{}
-		//3.查到需要更新的数据
-		user.Id = 1
-		err := o.Read(&user)
-
-		//4.给数据重新赋值
-		if err == nil{
-			user.Name = "111"
-
-			//5.更新
-			_,err = o.Update(&user)
-			if err != nil{
-				beego.Info("更新失败",err)
-				return
-			}
-		}
-	*/
-	/*
-
-		//1.有ORM对象
-		o := orm.NewOrm()
-		//2.删除的对象
-		user := models.User{}
-		//3.指定删除哪一条数据
-		user.Id = 1
-		//4.删除
-		_,err := o.Delete(&user)
-		if err != nil{
-			beego.Info("删除错误",err)
-			return
-		}
-
-
-		c.Data["data"] = "今天中午吃饺子"
-		c.TplName = "test.html"
-	*/
-	c.TplName = "login.html"
+	c.Data["articles"] = articles
+	c.TplName = "home.html"
 }
+
+func (c *MainController) ShowRegister() {
+	c.TplName = "register.html"
+}
+
+//注册
 func (c *MainController) Post() {
 
 	//1.拿到数据
@@ -357,7 +293,7 @@ func (c *MainController) ShowContent() {
 	}
 	o.Update(&arti)
 	//显示多对多查询
-	o.LoadRelated(&arti,"User")	//第一种方法
+	o.LoadRelated(&arti, "User") //第一种方法
 	//o.QueryTable("Article").Filter("User__User__Name",userName.(string)).Distinct().All(&arti)	//第二种方法
 
 	//3.传递数据给试图
@@ -439,9 +375,9 @@ func (c *MainController) HandleUpdate() {
 	arti.Acontent = content
 	arti.Aimg = "./static/img/" + filename
 
-	_, err = o.Update(&arti, "ArtiName", "Acontent", "Aimg")
+	_, err = o.Update(&arti)
 	if err != nil {
-		beego.Info("更新数据显示错误")
+		beego.Info("更新数据显示错误", err)
 		return
 	}
 	//4.返回列表页面
@@ -504,5 +440,53 @@ func (c *MainController) HandleAddType() {
 		return
 	}
 	//4.返回界面
+	c.Redirect("/addType", 302)
+}
+
+//删除文章类型
+func (c *MainController) HandleDeleteType() {
+	//1.拿到数据
+	id, err := c.GetInt("id")
+	if err != nil {
+		beego.Info("获取id数据错误")
+		return
+	}
+
+	//2.执行删除操作
+	o := orm.NewOrm()
+	artiType := models.ArticleType{Id: id}
+	err = o.Read(&artiType)
+	if err != nil {
+		beego.Info("查询错误")
+		return
+	}
+	o.Delete(&artiType)
+
+	//3.返回列表页面
+	c.Redirect("/addType", 302)
+}
+
+//处理文章类型更新
+func (c *MainController) HandleUpdateType() {
+	//1.拿到数据
+	id, _ := c.GetInt("id")
+	typeName := c.GetString("typeName")
+
+	if typeName == "" {
+		beego.Info("类型名称为空")
+		c.Redirect("/addType", 302)
+		return
+	}
+	//3.更新操作
+	o := orm.NewOrm()
+	artiType := models.ArticleType{Id: id, Tname: typeName}
+
+	_, err := o.Update(&artiType)
+	if err != nil {
+		beego.Info("更新数据错误")
+		c.Redirect("/addType", 302)
+		return
+	}
+	//4.返回列表页面
 	c.Redirect("/addType", 302)
 }

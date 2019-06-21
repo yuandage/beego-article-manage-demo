@@ -9,20 +9,20 @@ import (
 //表的设计
 type User struct {
 	Id      int
-	Name    string `orm:"unique"` //用户名
-	Pwd     string                //密码
+	Name    string     `orm:"unique"` //用户名
+	Pwd     string     //密码
 	Article []*Article `orm:"rel(m2m)"`
 }
 
 //文章结构体
 type Article struct {
 	Id       int       `orm:"pk;auto"`         //文章Id,主键,自增
-	ArtiName string    `orm:"size(20)"`        //文章名称
+	ArtiName string    `orm:"size(50)"`        //文章名称
 	Atime    time.Time `orm:"auto_now"`        //文章时间
 	Acount   int       `orm:"default(0);null"` //阅读量 允许为空
-	Acontent string                            //文章内容
-	Aimg     string                            //文章图片
-	Atype    string                            //文章类型
+	Acontent string    //文章内容
+	Aimg     string    //文章图片
+	Atype    string    //文章类型
 
 	ArticleType *ArticleType `orm:"rel(fk)"`
 	User        []*User      `orm:"reverse(many)"`
@@ -31,7 +31,7 @@ type Article struct {
 //类型表
 type ArticleType struct {
 	Id      int
-	Tname   string //文章类型
+	Tname   string     //文章类型
 	Article []*Article `orm:"reverse(many)"`
 }
 

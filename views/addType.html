@@ -13,8 +13,14 @@
             {{range .articleType}}
                 <tr>
                     <td>{{.Id}}</td>
-                    <td>{{.Tname}}</td>
-                    <td><a href="/deleteType" class="edit">删除</a><a href="javascript:;" class="edit">编辑</a></td>
+                    <td>
+                        <form method="post" action="/updateType">
+                            <input hidden name="id" value="{{.Id}}" >
+                            <input type="text" class="type_txt" placeholder="修改分类" name="typeName" value="{{.Tname}}">
+                            <input type="submit" class="addtype" value="修改">
+                        </form>
+                    </td>
+                    <td><a href="/deleteType?id={{.Id}}" class="edit">删除</a></td>
                 </tr>
                     {{end}}
 
