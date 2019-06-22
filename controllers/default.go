@@ -16,6 +16,7 @@ type MainController struct {
 	beego.Controller
 }
 
+//首页
 func (c *MainController) Get() {
 	o := orm.NewOrm()
 	var articles []models.Article //结构体数组
@@ -24,7 +25,15 @@ func (c *MainController) Get() {
 		beego.Info("查询所有文章信息出错")
 		return
 	}
+	//获取类型数据
+	var artiTypes []models.ArticleType
+	_, err = o.QueryTable("ArticleType").All(&artiTypes)
+	if err != nil {
+		beego.Info("获取类型错误")
+		return
+	}
 	c.Data["articles"] = articles
+	c.Data["articleType"] = artiTypes
 	c.TplName = "home.html"
 }
 
@@ -151,7 +160,7 @@ func (c *MainController) ShowIndex() {
 	} else {
 		count, err = o.QueryTable("Article").RelatedSel("ArticleType").Filter("ArticleType__Id", id).Count() //总记录条数
 	}
-	pageSize := 2                                              //一页的记录条数
+	pageSize := 5                                              //一页的记录条数
 	pageCount := math.Ceil(float64(count) / float64(pageSize)) //Ceil向上取整,Floor()向下取整
 
 	if pageIndex <= 0 {
@@ -253,7 +262,7 @@ func (c *MainController) HandleAdd() {
 
 	_, err = o.Insert(&arti)
 	if err != nil {
-		beego.Info("插入数据库错误")
+		beego.Info("插入数据库错误", err)
 		return
 	}
 

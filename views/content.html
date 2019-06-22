@@ -14,7 +14,11 @@
         </div>
         <div class="form_group">
             <label>文章内容：</label>
-            <p class="detail"><img src="{{.article.Aimg}}">{{.article.Acontent}}</p>
+            <textarea class="input_multxt" >{{.article.Acontent}}</textarea></textarea>
+        </div>
+        <div class="form_group">
+            <label>文章配图：</label>
+            <p class="detail"><img style="width: 200px;height: 150px;" src="{{.article.Aimg}}"></p>
         </div>
         <div class="form_group">
             <label>阅读次数：</label>
@@ -30,7 +34,7 @@
         </div>
         <div class="form_group">
             <label>创建时间：</label>
-            <p class="detail">{{.article.Atime.Format "2006-01-02"}}</p>
+            <p class="detail">{{.article.Atime.Format "2006-01-02 15:04:05"}}</p>
             <span>{{.errmsg}}</span>
         </div>
     </div>

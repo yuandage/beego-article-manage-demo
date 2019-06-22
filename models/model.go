@@ -20,7 +20,7 @@ type Article struct {
 	ArtiName string    `orm:"size(50)"`        //文章名称
 	Atime    time.Time `orm:"auto_now"`        //文章时间
 	Acount   int       `orm:"default(0);null"` //阅读量 允许为空
-	Acontent string    //文章内容
+	Acontent string    `orm:"size(1000)"`      //文章内容
 	Aimg     string    //文章图片
 	Atype    string    //文章类型
 
