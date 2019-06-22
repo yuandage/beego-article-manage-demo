@@ -312,6 +312,32 @@ func (c *MainController) ShowContent() {
 
 }
 
+//显示首页的内容详情页面
+func (c *MainController) ShowHomeContent() {
+	//1.获取文章ID
+	id, err := c.GetInt("id")
+	//beego.Info("id is ",id)
+	if err != nil {
+		beego.Info("获取文章ID错误", err)
+		return
+	}
+	//2.查询数据库获取数据
+	o := orm.NewOrm()
+	arti := models.Article{Id: id}
+	err = o.Read(&arti)
+	if err != nil {
+		beego.Info("查询错误", err)
+		return
+	}
+	arti.Acount += 1
+
+	o.Update(&arti)
+
+	//3.传递数据给试图
+	c.Data["article"] = arti
+	c.TplName = "home-content.html"
+}
+
 //显示编辑界面
 func (c *MainController) ShowUpdate() {
 	//1.获取文章ID

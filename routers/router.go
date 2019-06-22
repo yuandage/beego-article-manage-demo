@@ -17,15 +17,15 @@ func init() {
 		}
 	}
 
-	beego.InsertFilter("/index", beego.BeforeRouter, Filter)
-	beego.InsertFilter("/addArticle", beego.BeforeRouter, Filter)
 	beego.InsertFilter("/content", beego.BeforeRouter, Filter)
+	beego.InsertFilter("/addArticle", beego.BeforeRouter, Filter)
 	beego.InsertFilter("/update", beego.BeforeRouter, Filter)
 	beego.InsertFilter("/delete", beego.BeforeRouter, Filter)
 	beego.InsertFilter("/addType", beego.BeforeRouter, Filter)
+	beego.InsertFilter("/deleteType", beego.BeforeRouter, Filter)
+	beego.InsertFilter("/updateType", beego.BeforeRouter, Filter)
 
 	beego.Router("/", &controllers.MainController{})
-	beego.Router("/abc", &controllers.MainController{})
 
 	beego.Router("/register", &controllers.MainController{}, "get:ShowRegister")
 	//注意：当实现了自定义的请求方法，请求将不会访问默认方法
@@ -36,6 +36,7 @@ func init() {
 	beego.Router("/addArticle", &controllers.MainController{}, "get:ShowAdd;post:HandleAdd")
 
 	beego.Router("/content", &controllers.MainController{}, "get:ShowContent")
+	beego.Router("/home-content", &controllers.MainController{}, "get:ShowHomeContent")
 
 	beego.Router("/update", &controllers.MainController{}, "get:ShowUpdate;post:HandleUpdate")
 
